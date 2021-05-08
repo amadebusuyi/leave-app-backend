@@ -31,13 +31,12 @@ module.exports = {
   arrangeOutput : (data) => {
 
   var users = [];
+  var requests = {pending: [], approved: [], disapproved: []};
 
   var newUser = (users, userData) =>{
-    var addUser = {id: userData.uid, name: userData.name, requests: []};
-
-    delete userData.uid; delete userData.name;
+    var addUser = {id: userData.uid, name: userData.name};
     
-    if(userData.req_id !== null){addUser.requests.push(userData);}
+    if(userData.req_id !== null){requests[userData.status].push(userData);}
     users.push(addUser);
 
     return users;
@@ -61,8 +60,8 @@ module.exports = {
           }
 
           else{
-          delete userData.uid; delete userData.name;
-          if(userData.req_id !== null){users[pos].requests.push(userData);}
+          // delete userData.uid; delete userData.name;
+          if(userData.req_id !== null){requests[userData.status].push(userData);}
 
           }
 
@@ -74,7 +73,7 @@ module.exports = {
         
       }
 
-    return users;
+    return {users: users, requests: requests};
   },
 
   dateDiff : (first, second) => {
